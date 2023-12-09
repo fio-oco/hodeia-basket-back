@@ -28,14 +28,22 @@ export class UserController {
     return await this.userService.viewUser(usuarioid);
   }
 
-  @Patch(':usuarioid/update-password')
+  @Patch('update/password/:usuarioid')
   async updateUserPassword(
     @Param('usuarioid') usuarioid: string,
-    @Body('newPassword') newPassword: string,
+    @Body('password') password: string,
   ): Promise<any>{
-    await this.userService.updatePassword(usuarioid, newPassword);
+    return await this.userService.updatePassword(usuarioid, password);
   }
   // in the climbs app, used @Request 
+
+  @Patch('update/activity/:usuarioid')
+  async updateUserActivity(
+    @Param('usuarioid') usuarioid: string,
+    @Body('isActive') isActive: boolean,
+  ): Promise<User | null>{
+    return this.userService.updateUserActivity(usuarioid, isActive);
+  }
 
 
 /*   @Patch('update/:usuarioid')

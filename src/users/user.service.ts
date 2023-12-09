@@ -29,25 +29,26 @@ export class UserService {
     return await this.userRepository.findOne({ where: { usuarioid } });
   }
 
+  async updateUserActivity(usuarioid: string, isActive: boolean): Promise<User | null> {
+    
+    const userToUpdate = await this.userRepository.findOne({ where: { usuarioid } });
+    if (!userToUpdate) {
+      throw new NotFoundException('User not found');
+    }
+    userToUpdate.isActive = isActive;
+    return this.userRepository.save(userToUpdate);
+  }
+
   async updatePassword(usuarioid: string, password: string): Promise<any> {
     const userToUpdate = await this.userRepository.findOne({ where: { usuarioid } });
     if (!userToUpdate) {
       throw new NotFoundException('User not found');
     }
-    const hashedPassword = await userToUpdate.hashPassword(password);
+    const hashedPassword = await userToUpdate.hashPasswordBeforeInsert();
     userToUpdate.password = hashedPassword;
     return await this.userRepository.save(userToUpdate);
   } //this isn't working, I'm getting a 500 error saying that both salts and password are required, don't know what's up, might check my patches from the last project to see if I'm doing sth wrong here. 
-
-  async changeActivity(usuarioid: string, isActive: boolean): Promise<any>{
-    const userToUpdate = await this.userRepository.findOne({where: {usuarioid}});
-    if (!userToUpdate){
-      throw new NotFoundException('User not found');
-    }
-    userToUpdate.isActive = isActive;
-    return this.userRepository.save(userToUpdate);
-  } //haven't tested this yet but have a feeling it's not going to work. 
-
+ 
 
 // Commenting out this here, getting no terminal errors, but when I try update values on Thunderclient I get a 404 error. Going to leave this here but divide the big function into smaller, more specific patch methods.
 /*   async updateUser(

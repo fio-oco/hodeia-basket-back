@@ -21,11 +21,11 @@ export class User {
   @Column({ type: 'varchar'})
   password: string;
 
-  async hashPassword(password: string): Promise<string>{
+/*   async hashPassword(password: string): Promise<string>{
     const saltRounds = 10;
     return bcrypt.hash(password, saltRounds);
   }
-
+ */
   @BeforeInsert()
   async hashPasswordBeforeInsert() {
     this.password = await bcrypt.hash(this.password, 10);
