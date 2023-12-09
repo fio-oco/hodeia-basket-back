@@ -3,9 +3,10 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { UsersController } from './users/users.controller';
-import { UsersService } from './users/users.service';
-import { User } from './users/user.entity';
+import { UserController } from './users/user.controller';
+import { UserService } from './users/user.service';
+import { User } from './users/entities/user.entity';
+import { Role } from './users/entities/role.entity';
 
 @Module({
   imports: [
@@ -23,15 +24,16 @@ import { User } from './users/user.entity';
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_DATABASE'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        synchronize: false,
+        synchronize: true,
+        autoLoadEntities: true, // to autoload entities and avoid leaking implementation details to other parts of application/ breaking application domain boundaries.
         ssl: {
           rejectUnauthorized: false, // Esto es un ejemplo; ajusta según las necesidades de tu configuración de seguridad
         }
       }),
     }),
-    TypeOrmModule.forFeature([User])
+    TypeOrmModule.forFeature([User, Role])
   ],
-  controllers: [AppController, UsersController],
-  providers: [AppService, UsersService],
+  controllers: [AppController, UserController],
+  providers: [AppService, UserService],
 })
 export class AppModule {}
