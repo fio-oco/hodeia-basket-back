@@ -6,6 +6,6 @@ ConfigModule.forRoot();
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  await app.listen(5432); //or should this be 3000??
+  await app.listen(3000); 
 }
 bootstrap();
