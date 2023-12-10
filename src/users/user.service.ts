@@ -15,11 +15,36 @@ export class UserService {
     private readonly roleRepository: Repository<Role>,
   ) {}
 
-  async createUser(createUserDto: CreateUserDto): Promise<User> {
+/*  // my initial method, started getting errors after trying to fix issues with the rol, but did otherwise work
+ async createUser(createUserDto: CreateUserDto): Promise<User> {
     const user = this.userRepository.create(createUserDto);
     user.password = await user.hashPasswordBeforeInsert(); //saltrounds are specified in the user.entity
     return this.userRepository.save(user);
+  } */
+
+  async createUser(createUserDto: CreateUserDto): Promise<User> {
+    const newUser = new User();
+    newUser.nombre = createUserDto.nombre;
+    newUser.apellidos = createUserDto.apellidos;
+    newUser.email = createUserDto.email;
+    newUser.password = createUserDto.password;
+    
+    if (createUserDto.rol) {
+      const role = await this.roleRepository.findOne({where: {rolid: createUserDto.rol}}); // to get the Role entity by its ID
+      if (role) {
+        newUser.rol = role.rolid; //to assign Role entity to newUser.rol
+      } else {
+        throw new Error('Role not found'); // if specified role ID does not exist
+      }
+    }
+    try {
+      newUser.password = await newUser.hashPasswordBeforeInsert(); 
+      return await this.userRepository.save(newUser);
+    } catch (error) {
+      throw error;
+    }
   }
+
 
   async findAllUsers(): Promise<User[]> {
     return await this.userRepository.find();
@@ -47,7 +72,25 @@ export class UserService {
     const hashedPassword = await userToUpdate.hashPasswordBeforeInsert();
     userToUpdate.password = hashedPassword;
     return await this.userRepository.save(userToUpdate);
-  } //this isn't working, I'm getting a 500 error saying that both salts and password are required, don't know what's up, might check my patches from the last project to see if I'm doing sth wrong here. 
+  } 
+
+  async updateUserRole(
+    usuarioid:string, 
+    rolid: string,
+    ): Promise<any>{
+      const userToUpdate = await this.userRepository.findOne({ where: { usuarioid }, relations: ['rol'] });
+      if (!userToUpdate) {
+        throw new NotFoundException('User not found');
+      }
+      const role = await this.roleRepository.findOne({ where: { rolid } }); //think theres an error in this line, don't know how it gets rol from role.repos
+      if (!role) {
+        throw new NotFoundException('Role not found'); //it's throwing this error, I tried changing from rolid to rol here but it doesn't change anything, I don't know why.
+      }
+    
+      userToUpdate.rol = role.rolid; // Assign the role as an array, need to change this as no longer a many to many 
+    
+      return this.userRepository.save(userToUpdate);
+    }
  
 
 // Commenting out this here, getting no terminal errors, but when I try update values on Thunderclient I get a 404 error. Going to leave this here but divide the big function into smaller, more specific patch methods.
