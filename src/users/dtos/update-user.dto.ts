@@ -25,6 +25,7 @@ export class UpdateUserDto {
   @IsOptional()
   @IsString()
   rol?: string;
+  //getting errors with the patch for updating user rol
 
   @IsOptional()
   @IsString()

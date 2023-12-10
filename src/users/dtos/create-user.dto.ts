@@ -34,10 +34,8 @@ export class CreateUserDto {
   @IsString()
   @IsUUID() 
   rol: string; 
-// tried to include this here but I get an error in my createUser in my usersService, not sure why
 
-//Not sure how the login will have to work here to distinguish between accounts, maybe admin can send a special code to referees/ coaches or change their status or sth like that after they create their own accounts.. we have to rethink this. 
-//maybe rolId can be done with the update-user dto.. 
+//Not sure how the login will have to work here to distinguish between accounts, maybe admin can send a special code to referees/ coaches or change their status or sth like that after they create their own accounts.. we have to rethink this.  
 //need to decide if we want to include gender and userImg here too or maybe as updates
   /* @IsString()
   @IsEnum(['f', 'm', 'u'])
