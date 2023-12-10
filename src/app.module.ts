@@ -24,10 +24,10 @@ import { Role } from './users/entities/role.entity';
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_DATABASE'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        synchronize: true,
+        synchronize: false, //changing this to false stopped an error I was getting stating that roles had null values for nombre, don't understand why. 
         autoLoadEntities: true, // to autoload entities and avoid leaking implementation details to other parts of application/ breaking application domain boundaries.
         ssl: {
-          rejectUnauthorized: false, // Esto es un ejemplo; ajusta según las necesidades de tu configuración de seguridad
+          rejectUnauthorized: false, 
         }
       }),
     }),

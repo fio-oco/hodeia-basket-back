@@ -6,6 +6,7 @@ import {
     IsInt,
     IsNotEmpty,
     IsString,
+    IsUUID,
     Matches,
     MinLength,
   } from 'class-validator';
@@ -31,6 +32,7 @@ export class CreateUserDto {
 
 //@IsNotEmpty()
   @IsString()
+  @IsUUID() 
   rol: string; 
 // tried to include this here but I get an error in my createUser in my usersService, not sure why
 

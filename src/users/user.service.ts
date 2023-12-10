@@ -32,12 +32,11 @@ export class UserService {
     if (createUserDto.rol) {
       const role = await this.roleRepository.findOne({where: {rolid: createUserDto.rol}}); // to get the Role entity by its ID
       if (role) {
-        newUser.rol = role; //to assign Role entity to newUser.rol
+        newUser.rol = role.rolid; //to assign Role entity to newUser.rol
       } else {
         throw new Error('Role not found'); // if specified role ID does not exist
       }
     }
-
     try {
       newUser.password = await newUser.hashPasswordBeforeInsert(); 
       return await this.userRepository.save(newUser);
@@ -88,7 +87,7 @@ export class UserService {
         throw new NotFoundException('Role not found'); //it's throwing this error, I tried changing from rolid to rol here but it doesn't change anything, I don't know why.
       }
     
-      userToUpdate.rol = role; // Assign the role as an array
+      userToUpdate.rol = role.rolid; // Assign the role as an array, need to change this as no longer a many to many 
     
       return this.userRepository.save(userToUpdate);
     }
