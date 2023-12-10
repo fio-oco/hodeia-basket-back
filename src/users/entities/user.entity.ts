@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn, BeforeInsert, ManyToMany, JoinTable } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, BeforeInsert, ManyToMany, JoinTable, ManyToOne, JoinColumn } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { v4 as uuid } from 'uuid';
 import { Role } from './role.entity';
@@ -36,9 +36,12 @@ export class User {
   @Column({ type: 'varchar', nullable: true })
   usuarioImg: string;
 
-  @ManyToMany(() => Role, role => role.users, { cascade: true })
-  @JoinTable()
-  rol: Role[];
+  @Column({ type: 'uuid', nullable: false, default: 'e144cde5-91df-4f7e-b808-c984ba493507'}) // Change the column type to match the foreign key type
+  rolid: string;
+
+  @ManyToOne(() => Role, role => role.users)
+  @JoinColumn({ name: 'rolid' })
+  rol: Role;
 
   @Column({type: 'boolean', default: true})
   isActive: boolean;
