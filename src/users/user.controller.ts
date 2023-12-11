@@ -47,9 +47,9 @@ export class UserController {
   @Patch('update/rol/:usuarioid')
   async updateUserRole(
     @Param('usuarioid') usuarioid: string,
-    @Body('rolid') rolid: string,
+    @Body('rolid') rol: string,
   ): Promise<User | null>{
-    return this.userService.updateUserRole(usuarioid, rolid);
+    return this.userService.updateUserRole(usuarioid, rol);
   }
 
 /*   @Patch('update/:usuarioid')

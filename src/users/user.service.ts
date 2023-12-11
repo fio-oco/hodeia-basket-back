@@ -6,6 +6,7 @@ import { CreateUserDto } from './dtos/create-user.dto';
 import { Role } from './entities/role.entity';
 import { UpdateUserDto } from './dtos/update-user.dto';
 
+
 @Injectable()
 export class UserService {
   constructor(
@@ -32,7 +33,7 @@ export class UserService {
     if (createUserDto.rol) {
       const role = await this.roleRepository.findOne({where: {rolid: createUserDto.rol}}); // to get the Role entity by its ID
       if (role) {
-        newUser.rol = role.rolid; //to assign Role entity to newUser.rol
+        newUser.rol = role; //to assign Role entity to newUser.rol
       } else {
         throw new Error('Role not found'); // if specified role ID does not exist
       }
@@ -76,9 +77,9 @@ export class UserService {
 
   async updateUserRole(
     usuarioid:string, 
-    rolid: string,
+    rolid: string, 
     ): Promise<any>{
-      const userToUpdate = await this.userRepository.findOne({ where: { usuarioid }, relations: ['rol'] });
+      const userToUpdate = await this.userRepository.findOne({ where: { usuarioid } });
       if (!userToUpdate) {
         throw new NotFoundException('User not found');
       }
@@ -87,7 +88,7 @@ export class UserService {
         throw new NotFoundException('Role not found'); //it's throwing this error, I tried changing from rolid to rol here but it doesn't change anything, I don't know why.
       }
     
-      userToUpdate.rol = role.rolid; // Assign the role as an array, need to change this as no longer a many to many 
+      userToUpdate.rol = role; // Assign the role as an array, need to change this as no longer a many to many 
     
       return this.userRepository.save(userToUpdate);
     }
