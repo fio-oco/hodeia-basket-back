@@ -30,6 +30,10 @@ export class CreateUserDto {
   @IsEmail(null, { message: 'Por favor introduzca un email válido.' })
   email: string;
 
+  @IsNotEmpty()
+  @IsString()
+  gender: string;
+
 //@IsNotEmpty()
   @IsString()
   @IsUUID() 
