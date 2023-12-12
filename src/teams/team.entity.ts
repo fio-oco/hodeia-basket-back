@@ -5,6 +5,7 @@ import { v4 as uuid } from 'uuid';
 import { Match } from 'src/matches/match.entity';
 import { Season } from 'src/seasons/season.entity';
 import { Player } from 'src/players/player.entity';
+import { Season_Team } from 'src/season_teams/season_team.entity';
 
 @Entity({name: 'equipos'}) // getting errors here (I think I need it but it breaks the database connection when I added it but this way blank before)
 export class Team {
@@ -43,6 +44,9 @@ export class Team {
 
   @OneToMany(()=> Match, match => match.equipo_ganador)
   matches_won: Match[];
+
+  @OneToMany(() => Season_Team, season_team => season_team.equipo_id)
+  seasonal_teams: Season_Team[];
  
 /*   @OneToMany(() => Player, player => player.equipoid)
   team_players: Player[]; */
