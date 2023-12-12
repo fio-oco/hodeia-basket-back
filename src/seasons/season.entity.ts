@@ -15,6 +15,7 @@ export class Season {
   @ManyToOne(() => Liga, liga => liga.seasons)
   @JoinColumn({ name: 'ligaid' })
   liga: Liga;
+  //issue here 
 
   //Don't know how to ref the primary key of temporada because its ligaid and fecha_num, need to look it up 
  /*  @OneToMany(() => Match, match => match.season_pkey??)

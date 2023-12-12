@@ -7,6 +7,10 @@ import { UserController } from './users/user.controller';
 import { UserService } from './users/user.service';
 import { User } from './users/entities/user.entity';
 import { Role } from './users/entities/role.entity';
+import { TeamController } from './teams/team.controller';
+import { TeamModule } from './teams/team.module';
+import { TeamService } from './teams/team.service';
+import { Team } from './teams/team.entity';
 
 @Module({
   imports: [
@@ -31,9 +35,10 @@ import { Role } from './users/entities/role.entity';
         }
       }),
     }),
-    TypeOrmModule.forFeature([User, Role])
+    TypeOrmModule.forFeature([User, Role, Team]),
+    //TeamModule
   ],
-  controllers: [AppController, UserController],
-  providers: [AppService, UserService],
+  controllers: [AppController, UserController, TeamController],
+  providers: [AppService, UserService, TeamService],
 })
 export class AppModule {}

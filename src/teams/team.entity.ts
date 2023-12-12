@@ -15,15 +15,15 @@ export class Team {
   nombre: string;
   // ref to usuario id when usuario has the rol: "d8d4b514-800a-4827-a92b-e4f3770ef76b" (entrenador)
   // one team will have one coach (one-one)
- @OneToOne(() => User, user => user.team)
-  @JoinColumn({name: 'usuarioid'})
+ @OneToOne(() => User/* , user => user.team */)
+  @JoinColumn({name: 'entrenadorid'})
   @Column({type: 'uuid'})
   entrenadorid: User; //to bring the obj the the user
 
   // each league has many teams, each team can only have one league (many to one here)
   @ManyToOne(() => Liga, liga => liga.teams)
+  @JoinColumn({name: 'liga'})
   @Column({type: 'uuid'})
-  @JoinColumn({name: 'ligaid'})
   liga: uuid;
 
   @Column({type: 'varchar'})
@@ -44,8 +44,8 @@ export class Team {
   @OneToMany(()=> Match, match => match.equipo_ganador)
   matches_won: Match[];
  
-  @OneToMany(() => Player, player => player.equipoid)
-  team_players: Player[];
+/*   @OneToMany(() => Player, player => player.equipoid)
+  team_players: Player[]; */
 /*   usuarioID 1-N arbitroID
 temporada 1-N partidos *  */
 } 
