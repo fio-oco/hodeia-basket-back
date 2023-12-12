@@ -3,6 +3,8 @@ import { User } from 'src/users/entities/user.entity';
 import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, ManyToOne, OneToMany} from 'typeorm';
 import { v4 as uuid } from 'uuid';
 import { Match } from 'src/matches/match.entity';
+import { Season } from 'src/seasons/season.entity';
+import { Player } from 'src/players/player.entity';
 
 @Entity({name: 'equipos'}) // getting errors here (I think I need it but it breaks the database connection when I added it but this way blank before)
 export class Team {
@@ -34,8 +36,16 @@ export class Team {
   ciudad: string;
 
   @OneToMany(()=> Match, match => match.visitanteid)
-  matches: Match[];
+  matches_away: Match[];
 
- /*  @OneToMany(()=> Match, match => match.localid)
-  matches: Match[]; */ //getting an error here can't set duplicate values for matches, have to distinguish between them maybe matches as local??
+  @OneToMany(()=> Match, match => match.localid)
+  matches_home: Match[]; 
+
+  @OneToMany(()=> Match, match => match.equipo_ganador)
+  matches_won: Match[];
+ 
+  @OneToMany(() => Player, player => player.equipoid)
+  team_players: Player[];
+/*   usuarioID 1-N arbitroID
+temporada 1-N partidos *  */
 } 
