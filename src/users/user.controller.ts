@@ -25,9 +25,16 @@ export class UserController {
 
   @Get('id/:usuarioid')
   async findOne(@Param('usuarioid') usuarioid: string): Promise<User> {
-    return await this.userService.viewUser(usuarioid);
+    return await this.userService.findUserById(usuarioid);
   }
 
+  @Get('role/:roleName')
+  async findUsersByRole(@Param('roleName') roleName: string): Promise<User[]> {
+    return await this.userService.findUsersByRole(roleName);
+  }
+ /*  @Get('role/:roleName') 
+  async findUsers
+ */
   @Patch('update/password/:usuarioid')
   async updateUserPassword(
     @Param('usuarioid') usuarioid: string,

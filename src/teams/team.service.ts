@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Team } from './team.entity';
-import { Repository } from 'typeorm';
+import { Repository, FindManyOptions } from 'typeorm';
 
 @Injectable()
 export class TeamService {
@@ -14,7 +14,11 @@ export class TeamService {
         return await this.teamRepository.find();
       }
 
-    async viewTeam(equipoid: string): Promise<Team> {
+    async findTeamById(equipoid: string): Promise<Team> {
         return await this.teamRepository.findOne({ where: { equipoid } });
+    }
+
+    async findTeamByLeague(liga: string): Promise<Team[]>{
+        return await this.teamRepository.find({ where: {liga} });
     }
 }
