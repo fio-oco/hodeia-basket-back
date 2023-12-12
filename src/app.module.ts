@@ -11,6 +11,16 @@ import { TeamController } from './teams/team.controller';
 import { TeamModule } from './teams/team.module';
 import { TeamService } from './teams/team.service';
 import { Team } from './teams/team.entity';
+import { LigaController } from './ligas/liga.controller';
+import { LigaService } from './ligas/liga.service';
+import { LigaModule } from './ligas/liga.module';
+import { Liga } from './ligas/liga.entity';
+import { PlayerService } from './players/player.service';
+import { PlayerController } from './players/player.controller';
+import { PlayerModule } from './players/player.module';
+import { Player } from './players/player.entity';
+import { MatchesModule } from './matches/matches.module';
+import { Match } from './matches/match.entity';
 
 @Module({
   imports: [
@@ -35,10 +45,13 @@ import { Team } from './teams/team.entity';
         }
       }),
     }),
-    TypeOrmModule.forFeature([User, Role, Team]),
+    TypeOrmModule.forFeature([User, Role, Team, Liga, Player, Match]),
+    //MatchesModule,
+    //PlayersModule,
+    //LigasModule,
     //TeamModule
   ],
-  controllers: [AppController, UserController, TeamController],
-  providers: [AppService, UserService, TeamService],
+  controllers: [AppController, UserController, TeamController, LigaController, PlayerController],
+  providers: [AppService, UserService, TeamService, LigaService, PlayerService],
 })
 export class AppModule {}
