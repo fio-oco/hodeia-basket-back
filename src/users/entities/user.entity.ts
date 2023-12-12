@@ -1,8 +1,9 @@
-import { Column, Entity, PrimaryGeneratedColumn, BeforeInsert, ManyToOne, JoinColumn, OneToOne } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, BeforeInsert, ManyToOne, JoinColumn, OneToOne, OneToMany } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { v4 as uuid } from 'uuid';
 import { Role } from './role.entity';
 import { Team } from 'src/teams/team.entity';
+import { Match } from 'src/matches/match.entity';
 
 @Entity({name: 'usuarios'})
 export class User {
@@ -45,6 +46,11 @@ export class User {
 
   @OneToOne(() => Team, team => team.entrenadorid)
   team: Team;
+
+  @OneToMany(() => Match, match  => match.arbitroid)
+  matches_referreed: Match[];
+
+  
 }
 
 /*   @Column({ type: 'enum', enum: ['m', 'f', 'u'] })
