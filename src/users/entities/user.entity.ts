@@ -20,7 +20,7 @@ export class User {
   email: string;
 
   @Column({type: 'varchar'})
-  gender: string;
+  genero: string;
 
   @ManyToOne(() => Role, role => role.users) 
   @Column({ type: 'uuid', nullable: false, default: 'e144cde5-91df-4f7e-b808-c984ba493507'})
