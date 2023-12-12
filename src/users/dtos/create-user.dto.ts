@@ -32,7 +32,7 @@ export class CreateUserDto {
 
   @IsNotEmpty()
   @IsString()
-  gender: string;
+  genero: string;
 
 //@IsNotEmpty()
   @IsString()

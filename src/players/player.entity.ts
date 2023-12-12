@@ -1,6 +1,7 @@
 import { Team } from 'src/teams/team.entity';
+import { Foul } from 'src/fouls/foul.entity';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, OneToMany, ManyToOne, JoinColumn } from 'typeorm';
-import { v4 as uuid } from 'uuid';
+import { Score } from 'src/scores/score.entity';
 
 
 @Entity({name: 'jugadores'}) // getting errors here (I think I need it but it breaks the database connection when I added it but this way blank before)
@@ -29,9 +30,16 @@ export class Player {
   @Column({type: 'uuid'})
   @JoinColumn({name:'equipoid'})
   equipoid: Team;
-  //need to declare connection between faltas, puntuación and equipo id here. 
 
   @Column({type: 'varchar'})
   genero: string;
+
+  @OneToMany(() => Score, score => score.puntoid)
+  player_scores: Score[];
+
+  @OneToMany(() => Foul, foul => foul.faltaid)
+  player_fouls: Foul[];
+
+  //need to think about calculations of player points score in total and player points, we would need another intermediate table for jugadores_temporada if we want to display player data.
 
 }
