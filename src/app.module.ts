@@ -19,8 +19,9 @@ import { PlayerService } from './players/player.service';
 import { PlayerController } from './players/player.controller';
 import { PlayerModule } from './players/player.module';
 import { Player } from './players/player.entity';
-import { MatchesModule } from './matches/matches.module';
+import { MatchModule } from './matches/match.module';
 import { Match } from './matches/match.entity';
+import { Season } from './seasons/season.entity';
 
 @Module({
   imports: [
@@ -45,8 +46,8 @@ import { Match } from './matches/match.entity';
         }
       }),
     }),
-    TypeOrmModule.forFeature([User, Role, Team, Liga, Player, Match]),
-    //MatchesModule,
+    TypeOrmModule.forFeature([User, Role, Team, Liga, Player, Match, Season]),
+    MatchModule,
     //PlayersModule,
     //LigasModule,
     //TeamModule

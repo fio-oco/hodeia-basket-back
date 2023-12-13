@@ -20,6 +20,15 @@ async findOne(@Param('usuarioid') equipoid: string): Promise<Team> {
 async find(@Param('liga') liga: string): Promise<Team[] | null> {
   return await this.teamService.findTeamByLeague(liga);
 }
+
+//should be in equipobyid
+/* @Get(':ligaId/:numTemporada')
+  async findBySeason(
+    @Param('ligaId') ligaId: string,
+    @Param('numTemporada') numTemporada: number,
+  ): Promise<Team[]> {
+    return await this.teamService.findTeamsBySeason(ligaId, numTemporada);
+  } */
 }
 
 
