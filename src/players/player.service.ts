@@ -10,6 +10,8 @@ export class PlayerService {
         private readonly playerRepository: Repository<Player>,
     ){}
 
+   // async createPlayer()
+
     async findPlayersByTeam(equipoid: string): Promise<Player[]>{
         return await this.playerRepository.find({ where: { equipoid: Equal(equipoid) }});
     }
