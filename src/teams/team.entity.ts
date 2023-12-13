@@ -44,9 +44,15 @@ export class Team {
 
   @OneToMany(()=> Match, match => match.equipo_ganador)
   matches_won: Match[];
+  //need to think about what this array actually is; does it rep the array of teams who have lost a match? or the matches won by that team
+
+  @OneToMany(()=> Match, match => match.equipo_perdedor)
+  matches_lost: Match[];
 
   @OneToMany(() => Season_Team, season_team => season_team.equipo_id)
   seasonal_teams: Season_Team[];
+
+//think the relationship above needs some rethinking, is it teams in season or seasons a team has participated in..
  
 /*   @OneToMany(() => Player, player => player.equipoid)
   team_players: Player[]; */

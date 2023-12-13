@@ -21,4 +21,5 @@ export class TeamService {
     async findTeamByLeague(liga: string): Promise<Team[]>{
         return await this.teamRepository.find({ where: {liga} });
     }
+
 }

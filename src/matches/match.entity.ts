@@ -25,10 +25,16 @@ export class Match {
   localid: Team;
 
   //might need a trigger here, need to ask about this relationship again
+  //should the array here be called winning team rather than matches won?
   @ManyToOne(() => Team, team => team.matches_won)
   @Column({type: 'uuid'})
   @JoinColumn({name: 'equipo_ganador'})
   equipo_ganador: Team;
+
+  @ManyToOne(() => Team, team => team.matches_lost)
+  @Column({type: 'uuid'})
+  @JoinColumn({name: 'equipo_perdedor'})
+  equipo_perdedor: Team;
 
  @ManyToOne(() => User, user => user.matches_referreed)
  @Column({type: 'uuid'})
