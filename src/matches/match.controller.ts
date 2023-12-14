@@ -38,6 +38,15 @@ export class MatchController {
       }
     }
 
+    @Get('byLD/:ligaid/:fecha')
+    async getMatchesByLeagueAndDate(
+      @Param('ligaid') ligaid: string,
+      @Param('fecha') fecha: string,
+    ) {
+      const matches = await this.matchService.getMatchesByLeagueAndDate(ligaid, fecha);
+      return matches;
+    }
+
     @Post()
     async createMatch(@Body(new ValidationPipe()) createMatchDTO: CreateMatchDTO) {
       try {

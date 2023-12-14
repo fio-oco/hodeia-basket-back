@@ -25,6 +25,17 @@ export class MatchService {
             return await this.matchRepository.find({where: {fecha}});
         }
 
+        async getMatchesByLeagueAndDate(ligaid: string, fecha: string): Promise<Match[]> {
+            // Aquí se puede implementar la lógica para obtener los partidos según los parámetros
+            const matches = await this.matchRepository
+              .createQueryBuilder('match')
+              .where('match.ligaid = :ligaid', { ligaid })
+              .andWhere('match.fecha = :fecha', { fecha })
+              .getMany();
+        
+            return matches;
+        }
+        
         async getMatchesBySeason(ligaid: string, fechatemporada: number): Promise<Match[] | null> {
             try {
               const matches = await this.matchRepository
