@@ -32,9 +32,7 @@ export class UserController {
   async findUsersByRole(@Param('roleName') roleName: string): Promise<User[]> {
     return await this.userService.findUsersByRole(roleName);
   }
- /*  @Get('role/:roleName') 
-  async findUsers
- */
+
   @Patch('update/password/:usuarioid')
   async updateUserPassword(
     @Param('usuarioid') usuarioid: string,

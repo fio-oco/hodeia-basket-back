@@ -22,4 +22,5 @@ export class TeamService {
         return await this.teamRepository.find({ where: {liga} });
     }
 
+    
 }

@@ -22,6 +22,18 @@ import { Player } from './players/player.entity';
 import { MatchModule } from './matches/match.module';
 import { Match } from './matches/match.entity';
 import { Season } from './seasons/season.entity';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
+import { SeasonTeamController } from './season_teams/season_team.controller';
+import { SeasonTeamService } from './season_teams/season_team.service';
+import { SeasonTeamModule } from './season_teams/season_team.module';
+import { Season_Team } from './season_teams/season_team.entity';
+import { ScoreModule } from './scores/score.module';
+import { Score } from './scores/score.entity';
+import { FoulService } from './fouls/foul.service';
+import { FoulController } from './fouls/foul.controller';
+import { FoulModule } from './fouls/foul.module';
+import { Foul } from './fouls/foul.entity';
 
 @Module({
   imports: [
@@ -46,13 +58,20 @@ import { Season } from './seasons/season.entity';
         }
       }),
     }),
-    TypeOrmModule.forFeature([User, Role, Team, Liga, Player, Match, Season]),
+    TypeOrmModule.forFeature([User, Role, Team, Liga, Player, Match, Season, Season_Team, Score, Foul]),
     MatchModule,
     //PlayersModule,
     //LigasModule,
     //TeamModule
+  
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public'),
+    }),
+    SeasonTeamModule,
+    ScoreModule,
+    FoulModule, 
   ],
-  controllers: [AppController, UserController, TeamController, LigaController, PlayerController],
-  providers: [AppService, UserService, TeamService, LigaService, PlayerService],
+  controllers: [AppController, UserController, TeamController, LigaController, PlayerController, SeasonTeamController, FoulController],
+  providers: [AppService, UserService, TeamService, LigaService, PlayerService, SeasonTeamService, FoulService],
 })
 export class AppModule {}

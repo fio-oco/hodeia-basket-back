@@ -1,9 +1,6 @@
 import {
-    IsAlphanumeric,
-    IsBoolean,
     IsEmail,
     IsEnum,
-    IsInt,
     IsNotEmpty,
     IsString,
     IsUUID,

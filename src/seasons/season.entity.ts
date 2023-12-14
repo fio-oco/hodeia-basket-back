@@ -18,14 +18,14 @@ export class Season {
   liga: Liga;
   //issue here 
 
-  @OneToMany(() => Season_Team, season_team => season_team.fecha_temporadad)
+  @OneToMany(() => Season_Team, season_team => season_team.fecha_temporada)
   teams_of_season: Season_Team[];
 
-  @OneToMany(() => Match, match => match.fechatemporada)
+  @OneToMany(() => Match, match => match.season)
   matches_of_season: Match[];
 
-/*   @OneToMany(() => ) */
-
+  /* @OneToMany(() => Match, match => match.fechatemporada)
+  matches_of_season: Match[]; */
 
   //Don't know how to ref the primary key of temporada because its ligaid and fecha_num, need to look it up 
  /*  @OneToMany(() => Match, match => match.season_pkey??)
