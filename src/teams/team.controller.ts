@@ -13,8 +13,22 @@ export class TeamController {
 
 @Get('id/:equipoid')
 async findOne(@Param('usuarioid') equipoid: string): Promise<Team> {
-  return await this.teamService.viewTeam(equipoid);
+  return await this.teamService.findTeamById(equipoid);
 }
+
+@Get('liga/:liga')
+async find(@Param('liga') liga: string): Promise<Team[] | null> {
+  return await this.teamService.findTeamByLeague(liga);
+}
+
+//should be in equipobyid
+/* @Get(':ligaId/:numTemporada')
+  async findBySeason(
+    @Param('ligaId') ligaId: string,
+    @Param('numTemporada') numTemporada: number,
+  ): Promise<Team[]> {
+    return await this.teamService.findTeamsBySeason(ligaId, numTemporada);
+  } */
 }
 
 

@@ -11,6 +11,6 @@ import { Liga } from 'src/ligas/liga.entity';
 @Module({
   imports: [TypeOrmModule.forFeature([Team, Match, User, Liga])],
   controllers: [TeamController],
-  providers: [TeamService]
+  providers: [TeamService,]
 })
 export class TeamModule {}

@@ -51,8 +51,16 @@ export class UserService {
     return await this.userRepository.find();
   }
 
-  async viewUser(usuarioid: string): Promise<User> {
+  async findUserById(usuarioid: string): Promise<User> {
     return await this.userRepository.findOne({ where: { usuarioid } });
+  }
+
+  async findUsersByRole(roleName: string): Promise<User[] | null>{
+    return await this.userRepository
+    .createQueryBuilder('user')
+    .leftJoinAndSelect('user.rol', 'rol')
+    .where('rol.nombre = :roleName', {roleName})
+    .getMany();
   }
 
   async updateUserActivity(usuarioid: string, isActive: boolean): Promise<User | null> {
