@@ -12,7 +12,7 @@ export class TeamController {
 }
 
 @Get('id/:equipoid')
-async findOne(@Param('usuarioid') equipoid: string): Promise<Team> {
+async findOne(@Param('equipoid') equipoid: string): Promise<Team> {
   return await this.teamService.findTeamById(equipoid);
 }
 

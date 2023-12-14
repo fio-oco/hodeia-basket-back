@@ -44,48 +44,22 @@ export class Match {
  @OneToMany(() => Score, score => score.partidoid)
  match_scores: Score[];
 
- //need to figure out what data type fecha_num and ligaid
+ @ManyToOne(() => Season, season => season.matches_of_season)
+  @JoinColumn([
+    { name: 'fechatemporada', referencedColumnName: 'temporada_num' },
+    { name: 'ligaid', referencedColumnName: 'ligaid' }
+  ])
+  season: Season;
 
-@ManyToOne(() => Season, season => season.matches_of_season)
- @JoinColumn([
-  {name: 'fechatemporada', referencedColumnName: 'temporada_num'},
-  {name: 'ligaid', referencedColumnName: 'ligaid'}
-])
-@Column({type: 'integer'})
- fechatemporada: number;
- 
- @Column({type: 'uuid'})
- ligaid: string;
+  @Column({ type: 'integer' })
+  fechatemporada: number;
+
+  @Column({ type: 'uuid' })
+  ligaid: string;
 
  @Column({type: 'integer'})
  puntuacion_equipo_local: number;
 
  @Column({type: 'integer'})
  puntuacion_equipo_visitante: number;
-
- //I'm getting no errors but I don't think the above is going to work it loses the reference to ligaid in the seasons entity, I don't know what to do with this.
-
- //this is from chat.gbt, I don't think its going to work, it just doesn't seem to follow the logic from before. I'll work on it later and try see if I can get it to work or maybe declare each column seperately with its own @ManyToOne
-/*  @ManyToOne(() => Season, season => season.matches_of_season, {
-  primary: true,
-})
-@JoinColumn([
-  { name: 'fechaTemporada', referencedColumnName: 'temporada_num' },
-  { name: 'ligaid', referencedColumnName: 'ligaid' },
-])
-fechaTemporadaAndLigaId: Season;
-
-@Column({ type: 'timestamp' })
-fechaTemporada: Date;
-
-@Column({ type: 'uuid' })
-ligaid: string; */
-
-/*  
-  @Column({ type: 'varchar', length: 100 })
-  nombre: string;
-  // ref to usuario id when usuario has the rol: "d8d4b514-800a-4827-a92b-e4f3770ef76b" (entrenador)
-  // one team will have one coach (one-one)
-  @Column({type: 'varchar'})
-  genero: string; */
 } 

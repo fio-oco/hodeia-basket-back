@@ -19,7 +19,7 @@ export class Score {
   @Column({type: 'uuid'})
   partidoid: uuid;
 
-  @Column({type: 'timestamp'})
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   marcatiempo: Date;
 
   @Column({type: 'integer'})
