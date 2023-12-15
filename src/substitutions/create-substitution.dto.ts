@@ -1,4 +1,6 @@
-import { IsUUID, IsDate, IsNotEmpty, IsOptional } from 'class-validator';
+import { IsUUID, IsDate, IsNotEmpty, IsOptional, Validate } from 'class-validator';
+import { Match } from 'src/matches/match.entity';
+import { Player } from 'src/players/player.entity';
 
 export class CreateSubstitutionDTO {
   /* @IsUUID('4', { message: 'puntoid should be a valid UUID version 4' })
@@ -13,8 +15,8 @@ export class CreateSubstitutionDTO {
   jugador_sale: string;
 
   @IsNotEmpty()
-  @IsUUID('4', { message: 'partidoid should be a valid UUID version 4' })
-  partidoid: string;
+  @IsUUID('4', { message: 'partido_id should be a valid UUID version 4' })
+  partido_id: string;
 
   @IsOptional()
   @IsDate({ message: 'marcatiempo should be a valid Date' })

@@ -21,7 +21,7 @@ export class SubstitutionController {
     return await this.substitutionService.findSubstitutionsByMatch(partido_id);
   }
 
-/*   @Post('new')
+  @Post('new')
   async createSubstitution(
     @Body(new ValidationPipe()) createSubstitutionDTO: CreateSubstitutionDTO,
   ) {
@@ -34,5 +34,5 @@ export class SubstitutionController {
     } catch (error) {
       throw error;
     }
-  } */
+  }
 }
