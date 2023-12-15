@@ -42,6 +42,7 @@ export class CreateUserDto {
   @IsEnum(['f', 'm', 'u'])
   gender: string; */
 
+  //Jon wants to have a default password value.
   @IsNotEmpty()
   @Matches(passwordRegEx, {
     message: `Password must contain Minimum 6 and maximum 20 characters, 

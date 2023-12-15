@@ -38,6 +38,8 @@ import { SubstitutionController } from './substitutions/substitution.controller'
 import { SubstitutionService } from './substitutions/substitution.service';
 import { SubstitutionModule } from './substitutions/substitution.module';
 import { Substitution } from './substitutions/substitution.entity';
+import { SocketGateway } from './socket/socket.gateway';
+import { MatchService } from './matches/match.service';
 
 @Module({
   imports: [
@@ -77,6 +79,6 @@ import { Substitution } from './substitutions/substitution.entity';
     SubstitutionModule, 
   ],
   controllers: [AppController, UserController, TeamController, LigaController, PlayerController, SeasonTeamController, FoulController, SubstitutionController],
-  providers: [AppService, UserService, TeamService, LigaService, PlayerService, SeasonTeamService, FoulService, SubstitutionService],
+  providers: [AppService, UserService, TeamService, LigaService, PlayerService, SeasonTeamService, FoulService, SubstitutionService, MatchService, SocketGateway],
 })
 export class AppModule {}
