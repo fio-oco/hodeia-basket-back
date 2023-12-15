@@ -7,6 +7,7 @@ import { Season } from 'src/seasons/season.entity';
 export class Season_Team {
   @PrimaryGeneratedColumn('uuid')
   equipo_temporadaid: uuid;
+  
  
   @ManyToOne(() => Team, team => team.seasonal_teams)
   @JoinColumn({name: 'equipo_id'})
@@ -41,12 +42,12 @@ export class Season_Team {
 
 //re temporada_num in table temporada
   @Column({type: 'integer'})
-  fecha_temporadad: number;
+  fecha_temporada: number;
 
 @ManyToOne(() => Season, season => season.teams_of_season)
 @JoinColumn([
     { name: 'ligaid', referencedColumnName: 'ligaid' },
-    { name: 'temporada_num', referencedColumnName: 'temporada_num' },
+    { name: 'fecha_temporada', referencedColumnName: 'temporada_num' },
   ])
   season: Season; // Assuming you have a property 'temporada' of type Temporadas in EquiposTemporada entity
 // I have a feeling the above is incorrect, need to come back to it but I think I need to change the values in the join_columns
