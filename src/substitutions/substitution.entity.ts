@@ -12,19 +12,19 @@ export class Substitution {
   @ManyToOne(() => Player, player => player.jugador_entra_substitutions)
   @JoinColumn({name: 'jugador_entra'})
   @Column({ type: 'uuid'})
-  jugador_entra: Player;
+  jugador_entra: uuid;
 
   @ManyToOne(() => Player, player => player.jugador_sale_substitutions)
   @JoinColumn({name: 'jugador_sale'})
   @Column({ type: 'uuid'})
-  jugador_sale: Player;
+  jugador_sale: uuid;
 
  @ManyToOne(() => Match, match => match.match_substitutions)
  @JoinColumn({name: 'partido_id'})
   @Column({type: 'uuid'})
-  partido_id: Match;
+  partido_id: uuid;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @Column({ type: 'timestamp'/* , default: () => 'CURRENT_TIMESTAMP' */ })
   marcatiempocambio: Date;
 
 }

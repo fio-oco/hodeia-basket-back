@@ -21,11 +21,16 @@ export class SubstitutionService {
   }
 
 /*   async createSubstitution(createSubstitutionDTO: CreateSubstitutionDTO): Promise<Substitution> {
+    const { jugador_entra, jugador_sale, partidoid, marcatiempocambio } = createSubstitutionDTO;
+  
+    // Parse the received date string into a Date object
+    const parsedDate = new Date(marcatiempocambio);
+  
     const newSubstitution = this.substitutionRepository.create({
-      jugador_entra: createSubstitutionDTO.jugador_entra, 
-      jugador_sale: createSubstitutionDTO.jugador_sale, 
-      partidoid: createSubstitutionDTO.partidoid,
-      marcatiempocambio: new Date(),
+      jugador_entra: { jugadorid: jugador_entra},
+      jugador_sale,
+      partido_id,
+      marcatiempocambio: parsedDate, // Assign the parsed date here
     });
   
     try {
@@ -34,6 +39,47 @@ export class SubstitutionService {
       throw error;
     }
   } */
+  
+//second attempt, getting an error for the timestamp being in the incorrect format
+/*   async createSubstitution(createSubstitutionDTO: CreateSubstitutionDTO): Promise<Substitution>{
+    const newSubstitution = this.substitutionRepository.create({
+      ...createSubstitutionDTO,
+      marcatiempocambio: Date(),
+    });
+    try {
+      return await this.substitutionRepository.save(newSubstitution);
+    } catch (error) {
+      throw error;
+  }
+} */
+
+  async createSubstitution(createSubstitutionDTO: CreateSubstitutionDTO): Promise<Substitution>{
+    const newSubstitution = this.substitutionRepository.create({
+      ...createSubstitutionDTO,
+      marcatiempocambio: new Date(),
+    });
+    try{
+      return await this.substitutionRepository.save(newSubstitution);
+    } catch (error){
+      throw error;
+    }
+  }
+
+}
+  /*async createSubstitution(createSubstitutionDTO: CreateSubstitutionDTO): Promise<Substitution> {
+    const newSubstitution = this.substitutionRepository.create({
+      jugador_entra: createSubstitutionDTO.jugador_entra, 
+      jugador_sale: createSubstitutionDTO.jugador_sale, 
+      partido_id: createSubstitutionDTO.partido_id,
+      marcatiempocambio: new Date(),
+    });
+  
+    try {
+      return await this.substitutionRepository.save(newSubstitution);
+    } catch (error) {
+      throw error;
+    }
+  }
 
   // getting lots of errors here, don't understand why. need to come back to it tomrorrow. 
 
@@ -73,4 +119,4 @@ const newSubstitution = this.substitutionRepository.create({
       throw error;
     }
   } */
-}
+
