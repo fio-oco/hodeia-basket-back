@@ -7,9 +7,10 @@ import { Match } from 'src/matches/match.entity';
 import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
 import { Liga } from 'src/ligas/liga.entity';
+import { Substitution } from 'src/substitutions/substitution.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Team, Match, User, Liga])],
+  imports: [TypeOrmModule.forFeature([Team, Match, User, Liga, Substitution])],
   controllers: [TeamController],
   providers: [TeamService,]
 })
