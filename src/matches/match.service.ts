@@ -26,7 +26,7 @@ export class MatchService {
         }
 
         async getMatchesByLeagueAndDate(ligaid: string, fecha: string): Promise<Match[]> {
-            // Aquí se puede implementar la lógica para obtener los partidos según los parámetros
+            
             const matches = await this.matchRepository
               .createQueryBuilder('match')
               .where('match.ligaid = :ligaid', { ligaid })
@@ -39,9 +39,9 @@ export class MatchService {
         async getMatchesBySeason(ligaid: string, fechatemporada: number): Promise<Match[] | null> {
             try {
               const matches = await this.matchRepository
-                .createQueryBuilder('match') // Use your Partido entity name
-                .innerJoinAndSelect('match.season', 'season') // Join with the season entity
-                .where('season.ligaid = :ligaid', { ligaid }) // Filter by ligaid
+                .createQueryBuilder('match') // 
+                .innerJoinAndSelect('match.season', 'season') 
+                .where('season.ligaid = :ligaid', { ligaid }) 
                 .andWhere('season.temporada_num = :fechatemporada', { fechatemporada }) 
                 .getMany();
         

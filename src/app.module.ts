@@ -34,6 +34,10 @@ import { FoulService } from './fouls/foul.service';
 import { FoulController } from './fouls/foul.controller';
 import { FoulModule } from './fouls/foul.module';
 import { Foul } from './fouls/foul.entity';
+import { SubstitutionController } from './substitutions/substitution.controller';
+import { SubstitutionService } from './substitutions/substitution.service';
+import { SubstitutionModule } from './substitutions/substitution.module';
+import { Substitution } from './substitutions/substitution.entity';
 
 @Module({
   imports: [
@@ -58,7 +62,7 @@ import { Foul } from './fouls/foul.entity';
         }
       }),
     }),
-    TypeOrmModule.forFeature([User, Role, Team, Liga, Player, Match, Season, Season_Team, Score, Foul]),
+    TypeOrmModule.forFeature([User, Role, Team, Liga, Player, Match, Season, Season_Team, Score, Foul, Substitution]),
     MatchModule,
     //PlayersModule,
     //LigasModule,
@@ -69,9 +73,10 @@ import { Foul } from './fouls/foul.entity';
     }),
     SeasonTeamModule,
     ScoreModule,
-    FoulModule, 
+    FoulModule,
+    SubstitutionModule, 
   ],
-  controllers: [AppController, UserController, TeamController, LigaController, PlayerController, SeasonTeamController, FoulController],
-  providers: [AppService, UserService, TeamService, LigaService, PlayerService, SeasonTeamService, FoulService],
+  controllers: [AppController, UserController, TeamController, LigaController, PlayerController, SeasonTeamController, FoulController, SubstitutionController],
+  providers: [AppService, UserService, TeamService, LigaService, PlayerService, SeasonTeamService, FoulService, SubstitutionService],
 })
 export class AppModule {}

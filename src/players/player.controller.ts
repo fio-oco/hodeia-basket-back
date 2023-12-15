@@ -10,4 +10,6 @@ export class PlayerController {
     async find(@Param('equipoid') equipoid: string): Promise<Player[] | null>{
         return await this.playerService.findPlayersByTeam(equipoid);
     }
+
+    //need a patch here to be able to update player equipoid ie. change players on a team..
 }

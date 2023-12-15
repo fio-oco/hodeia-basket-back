@@ -4,6 +4,7 @@ import { Team } from 'src/teams/team.entity';
 import { User } from 'src/users/entities/user.entity';
 import { Season } from 'src/seasons/season.entity';
 import { Score } from 'src/scores/score.entity';
+import { Substitution } from 'src/substitutions/substitution.entity';
 
 @Entity({name: 'partidos'}) // getting errors here (I think I need it but it breaks the database connection when I added it but this way blank before)
 export class Match {
@@ -43,6 +44,9 @@ export class Match {
 
  @OneToMany(() => Score, score => score.partidoid)
  match_scores: Score[];
+
+ @OneToMany(() => Substitution, Substitution => Substitution.partido_id)
+ match_substitutions: Substitution[];
 
  @ManyToOne(() => Season, season => season.matches_of_season)
   @JoinColumn([

@@ -4,6 +4,7 @@ import { User } from './entities/user.entity';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 
+
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -29,9 +30,21 @@ export class UserController {
   }
 
   @Get('role/:roleName')
+async findUsersByRole(@Param('roleName') roleName: string): Promise<Partial<User>[]>{
+  const users = await this.userService.findUsersByRole(roleName);
+
+  const usersWithoutPasswordAndRole: Partial<User>[] = users.map(user => {
+    const { password, rol, ...userWithoutPasswordAndRole } = user; 
+    return userWithoutPasswordAndRole;
+  });
+
+  return usersWithoutPasswordAndRole;
+}
+
+/*   @Get('role/:roleName')
   async findUsersByRole(@Param('roleName') roleName: string): Promise<User[]> {
     return await this.userService.findUsersByRole(roleName);
-  }
+  } */
 
   @Patch('update/password/:usuarioid')
   async updateUserPassword(
