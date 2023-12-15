@@ -60,35 +60,28 @@ export class MatchService {
       throw error;
     }
   }
-
-//this returned the info in one object but with an array of all players from both teams
-async getMatchTeamsAndPlayers(partidoid: string) {
-    const query = `
-      SELECT 
-        m.partidoid AS matchId,
-        m.fecha AS matchDate,
-        lt.nombre AS localTeamName,
-        vt.nombre AS visitorTeamName,
-        array_agg(j.nombre || ' ' || j.apellido) AS players
-      FROM
-        partidos m
-      JOIN
-        equipos lt ON m.localid = lt.equipoid
-      JOIN
-        equipos vt ON m.visitanteid = vt.equipoid
-      JOIN
-        jugadores j ON j.equipoid = lt.equipoid OR j.equipoid = vt.equipoid
-      WHERE
-        m.partidoid = $1
-      GROUP BY
-        m.partidoid, m.fecha, lt.nombre, vt.nombre
-    `;
+  //not sure if this is what Jon needs but I think it gets all the data from relevant tables.
+  async getMatchTeamsAndPlayers(partidoid: string) {
+    try {
+      const matchDetails = await this.matchRepository
+        .createQueryBuilder('partidos')
+        .leftJoinAndSelect('partidos.localid', 'localTeam')
+        .leftJoinAndSelect('partidos.visitanteid', 'visitanteTeam')
+        .leftJoinAndMapMany(
+          'localTeam.player',
+          Player, //entity 
+          'jugadores', // Alias for joining tables
+          'jugadores.equipoid = localTeam.equipoid OR jugadores.equipoid = visitanteTeam.equipoid'
+        )
+        .where('partidos.partidoid = :partidoid', { partidoid })
+        .getOne();
   
-    const results = await this.matchRepository.query(query, [partidoid]);
-    return results;
+      return matchDetails;
+    } catch (error) {
+      throw error;
+    }
   }
-
-
+  
   async createMatch(createMatchDTO: CreateMatchDTO): Promise<Match> {
     const newMatch = new Match();
     newMatch.fecha = createMatchDTO.fecha;

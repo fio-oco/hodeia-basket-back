@@ -17,7 +17,6 @@ import { Season } from 'src/seasons/season.entity';
 })
 export class SubstitutionModule {
 
-
 }
 
 
