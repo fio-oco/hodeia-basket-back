@@ -43,7 +43,7 @@ export class MatchController {
     }
 
     @Get('teamsplayersdate/:partidoid')
-    async getMatchDetailsById(
+    async getMatchTeamsAndPlayers(
       @Param('partidoid') partidoid: string){
         try {
           const matchDetails = await this.matchService.getMatchTeamsAndPlayers(partidoid);
