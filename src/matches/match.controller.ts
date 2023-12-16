@@ -72,14 +72,15 @@ export class MatchController {
       }
     }
 
-    // Don't know if a need to seperate set winner and set loser at once or if I need seperate functions.
     // This needs a lot of thinking
-    @Patch('setWinner/:partidoId/equipoGanador/:equipoid')
-    async setEquipoGanador(
-      @Param('partidoId') partidoId: string,
-      @Param('equipoid') equipoid: string,
-    ): Promise<void> {
-      await this.matchService.setWinningTeam(partidoId, equipoid);
+    @Patch('results/:partidoid')
+    async manageMatchResults(@Param('partidoid') partidoid: string){
+      try {
+        const result = await this.matchService.manageMatchResults(partidoid);
+        return {success: true, message: 'Match results managed successfully', result};
+      } catch (error){
+        return {success: false, message: 'Failed to manage match results', error: error.message};
+      }
     }
 
 }
