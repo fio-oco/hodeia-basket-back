@@ -54,6 +54,10 @@ export class UserService {
     return await this.userRepository.findOne({ where: { usuarioid } });
   }
 
+  async findByEmail(email: string): Promise<User>{
+    return await this.userRepository.findOne({where: {email}});
+  }
+
   async findUsersByRole(roleName: string): Promise<User[] | null>{
     return await this.userRepository
     .createQueryBuilder('user')
