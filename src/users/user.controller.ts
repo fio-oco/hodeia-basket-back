@@ -28,6 +28,11 @@ export class UserController {
     return await this.userService.findUserById(usuarioid);
   }
 
+  @Get('email/:email')
+  async find(@Param('email') email: string): Promise<User>{
+    return await this.userService.findByEmail(email);
+  }
+
   @Get('role/:roleName')
 async findUsersByRole(@Param('roleName') roleName: string): Promise<Partial<User>[]>{
   const users = await this.userService.findUsersByRole(roleName);
@@ -39,11 +44,6 @@ async findUsersByRole(@Param('roleName') roleName: string): Promise<Partial<User
 
   return usersWithoutPasswordAndRole;
 }
-
-/*   @Get('role/:roleName')
-  async findUsersByRole(@Param('roleName') roleName: string): Promise<User[]> {
-    return await this.userService.findUsersByRole(roleName);
-  } */
 
   @Patch('update/password/:usuarioid')
   async updateUserPassword(
