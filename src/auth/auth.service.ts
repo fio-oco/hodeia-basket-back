@@ -22,7 +22,10 @@ export class AuthService {
     console.log(password);
     console.log(user.password);
     //getting errors at this point, the compare below returns false.
-    if (user && (await bcrypt.compare(password, user.password))) {
+    const compared = await bcrypt.compare(password, user.password)
+    console.log(compared);
+    
+    if (user && compared) {
       const { password, ...result } = user;
       console.log(result);
       return result;
