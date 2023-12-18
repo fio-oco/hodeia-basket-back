@@ -51,11 +51,4 @@ export class Team {
 
   @OneToMany(() => Season_Team, season_team => season_team.equipo_id)
   seasonal_teams: Season_Team[];
-
-//think the relationship above needs some rethinking, is it teams in season or seasons a team has participated in..
- 
-/*   @OneToMany(() => Player, player => player.equipoid)
-  team_players: Player[]; */
-/*   usuarioID 1-N arbitroID
-temporada 1-N partidos *  */
 } 

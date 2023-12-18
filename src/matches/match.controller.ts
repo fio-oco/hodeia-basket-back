@@ -12,10 +12,14 @@ export class MatchController {
         return await this.matchService.findAllMatches();
     } 
 
+    @Get('id/:partidoid')
+    async findOne(@Param('partidoid') partidoid: string): Promise<Match>{
+      return await this.matchService.getMatchById(partidoid);
+    }
+
     /* @Get('equipo/: equipoid')
     async findMatchTeams() */
-
-    //need to test this tomorrow and format date in db. 
+    
     @Get('date/:fecha')
     async find(@Param('fecha') fecha: Date): Promise<Match[] | null>{
         return await this.matchService.findMatchesByDate(fecha);
@@ -38,6 +42,17 @@ export class MatchController {
       }
     }
 
+    @Get('teamsplayersdate/:partidoid')
+    async getMatchTeamsAndPlayers(
+      @Param('partidoid') partidoid: string){
+        try {
+          const matchDetails = await this.matchService.getMatchTeamsAndPlayers(partidoid);
+          return matchDetails;
+        } catch (error){
+          throw error;
+        }
+      }
+    
     @Get('byLD/:ligaid/:fecha')
     async getMatchesByLeagueAndDate(
       @Param('ligaid') ligaid: string,
@@ -57,14 +72,15 @@ export class MatchController {
       }
     }
 
-    // Don't know if a need to seperate set winner and set loser at once or if I need seperate functions.
     // This needs a lot of thinking
-    @Patch('setWinner/:partidoId/equipoGanador/:equipoid')
-    async setEquipoGanador(
-      @Param('partidoId') partidoId: string,
-      @Param('equipoid') equipoid: string,
-    ): Promise<void> {
-      await this.matchService.setWinningTeam(partidoId, equipoid);
+    @Patch('results/:partidoid')
+    async manageMatchResults(@Param('partidoid') partidoid: string){
+      try {
+        const result = await this.matchService.manageMatchResults(partidoid);
+        return {success: true, message: 'Match results managed successfully', result};
+      } catch (error){
+        return {success: false, message: 'Failed to manage match results', error: error.message};
+      }
     }
 
 }
