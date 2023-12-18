@@ -31,13 +31,6 @@ export class User {
   @Column({ type: 'varchar'})
   password: string;
 
-  @BeforeInsert()
-  async hashPasswordBeforeInsert() {
-    this.password = await bcrypt.hash(this.password, 10);
-    return this.password;
-    // This is supposed to hash the password before saving it
-  }
-
   @Column({ type: 'varchar', nullable: true })
   usuarioImg: string;
 
