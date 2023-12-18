@@ -13,7 +13,7 @@ export class CreateScoreDTO {
   partidoid: string;
 
   @IsOptional()
-  @IsDate({ message: 'marcatiempo should be a valid Date' })
+  @IsDate({ message: 'marcatiempo should be a valid timestamp' })
   marcatiempo?: Date;
 
   @IsNotEmpty()

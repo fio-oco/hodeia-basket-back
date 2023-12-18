@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import * as bcrypt from 'bcrypt';
 import { Not, Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { CreateUserDto } from './dtos/create-user.dto';
@@ -39,7 +40,10 @@ export class UserService {
       }
     }
     try {
-      newUser.password = await newUser.hashPasswordBeforeInsert(); 
+      console.log(newUser.password);
+      newUser.password = await bcrypt.hash(newUser.password, 10); 
+      console.log(newUser.password);
+      
       return await this.userRepository.save(newUser);
     } catch (error) {
       throw error;
@@ -81,8 +85,8 @@ export class UserService {
     if (!userToUpdate) {
       throw new NotFoundException('User not found');
     }
-    const hashedPassword = await userToUpdate.hashPasswordBeforeInsert();
-    userToUpdate.password = hashedPassword;
+    // const hashedPassword = await bcrypt.hash(userToUpdate.password, 10);
+    userToUpdate.password = await bcrypt.hash(userToUpdate.password, 10);
     return await this.userRepository.save(userToUpdate);
   } 
 
