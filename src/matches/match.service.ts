@@ -62,7 +62,47 @@ export class MatchService {
     }
   }
   //not sure if this is what Jon needs but I think it gets all the data from relevant tables.
-  async getMatchTeamsAndPlayers(partidoid: string) {
+  async getLocalTeamAndPlayers(partidoid: string) {
+    try {
+      const localTeamDetails = await this.matchRepository
+        .createQueryBuilder('partidos')
+        .leftJoinAndSelect('partidos.localid', 'localTeam')
+        .leftJoinAndMapMany(
+          'localTeam.players',
+          Player, // Entity
+          'jugadores', // Alias for joining tables
+          'jugadores.equipoid = localTeam.equipoid'
+        )
+        .where('partidos.partidoid = :partidoid', { partidoid })
+        .getOne();
+  
+      return localTeamDetails;
+    } catch (error) {
+      throw error;
+    }
+  }
+  
+  async getVisitorTeamAndPlayers(partidoid: string) {
+    try {
+      const visitorTeamDetails = await this.matchRepository
+        .createQueryBuilder('partidos')
+        .leftJoinAndSelect('partidos.visitanteid', 'visitanteTeam')
+        .leftJoinAndMapMany(
+          'visitanteTeam.players',
+          Player, // Entity
+          'jugadores', // Alias for joining tables
+          'jugadores.equipoid = visitanteTeam.equipoid'
+        )
+        .where('partidos.partidoid = :partidoid', { partidoid })
+        .getOne();
+  
+      return visitorTeamDetails;
+    } catch (error) {
+      throw error;
+    }
+  }
+  
+/*   async getMatchTeamsAndPlayers(partidoid: string) {
     try {
       const matchDetails = await this.matchRepository
         .createQueryBuilder('partidos')
@@ -81,7 +121,7 @@ export class MatchService {
     } catch (error) {
       throw error;
     }
-  }
+  } */
   
   async createMatch(createMatchDTO: CreateMatchDTO): Promise<Match> {
     const newMatch = new Match();

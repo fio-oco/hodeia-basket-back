@@ -46,8 +46,9 @@ export class MatchController {
     async getMatchTeamsAndPlayers(
       @Param('partidoid') partidoid: string){
         try {
-          const matchDetails = await this.matchService.getMatchTeamsAndPlayers(partidoid);
-          return matchDetails;
+          const localTeamDetails = await this.matchService.getLocalTeamAndPlayers(partidoid);
+          const visitorTeamDetails = await this.matchService.getVisitorTeamAndPlayers(partidoid)
+          return {localTeamDetails, visitorTeamDetails};
         } catch (error){
           throw error;
         }
