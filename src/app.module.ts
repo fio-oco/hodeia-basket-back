@@ -67,9 +67,9 @@ import { AuthModule } from './auth/auth.module';
     }),
     TypeOrmModule.forFeature([User, Role, Team, Liga, Player, Match, Season, Season_Team, Score, Foul, Substitution]),
     MatchModule,
-    //PlayersModule,
-    //LigasModule,
-    //TeamModule
+    PlayerModule,
+    LigaModule,
+    TeamModule,
   
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),

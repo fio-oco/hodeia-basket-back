@@ -6,6 +6,7 @@ import { Match } from 'src/matches/match.entity';
 import { MatchService } from 'src/matches/match.service';
 import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
+import { FoulService } from 'src/fouls/foul.service';
 
 @WebSocketGateway(3001, { cors: 'http://localhost:5173' })
 export class SocketGateway {
@@ -15,8 +16,9 @@ export class SocketGateway {
 
   constructor(
     //@InjectRepository(Match) private readonly matchRepository: Repository<Match>){}
-    //private readonly foulService: FoulService){}
-    private readonly matchService: MatchService){
+    //private readonly matchService: MatchService, 
+    //private readonly foulService: FoulService){
+    /* private readonly matchService: MatchService) */){
       const httpServer = createServer();
       const io = new Server(httpServer, {
         cors: {
@@ -26,36 +28,52 @@ export class SocketGateway {
           // credentials: true,
         }
       });
-      /* const io = require('socket.io')(this.server, {
-        cors: {
-          origin: 'http://localhost:5173',
-          methods: ['GET', 'POST', 'PATCH'],
-          allowedHeaders: ['Content-Type', 'Authorization'],
-          credentials: true,
-        },
-      }); */
 
-      io.on('connection', (socket) => {
-        console.log('Socket connected:', socket.id);
-      });
+      // io.on('connection', (socket: Socket) => {
+      //   console.log('User connected:', socket.id);
 
+      //   socket.on('foulUpdate', (data: any) => {
+
+      //     io.emit('foulUpate', {
+      //       partidoid: data.partidoid,
+      //       foulData:data,
+      //     })
+      //   });
+        
+      //   socket.on('gameUpdate', (data: any) => {
+      //     console.log(data);
+      //     socket.emit('gameUpdate', data)
+          
+      //   })
+
+
+      // });
       // httpServer.listen(3001, () => {
       //   console.log('Socket.IO server running on port 3001')
+
       // })
     }
 
-    
   handleConnection(socket: Socket){
     socket.on('joinMatchRoom', (partidoid: string) => {
+      console.log('cuando me llaman desde el front');
+      
       socket.join(partidoid);
       console.log(`Client connected: ${socket.id} in match room ${partidoid}` );
     });
     
-  //need logic for joining rooms here
   }
+  // handleRefereeData(client: Socket, partidoid: string, data: any){
+  //   this.server.emit('gameUpdate', data);
+  // }
 
-  handleRefereeData(client: Socket, partidoid: string, data: any){
-    this.server.emit('gameUpdate', data);
+  handleGameUpdate(socket: Socket) {
+    console.log(socket);
+    socket.on('gameUpdate', (data: any) => {
+      console.log(data);
+      
+      socket.emit('gameUpdate', {data});
+    })
   }
 
   handleJoinMatchRoom(client: Socket, partidoid: string) {
@@ -85,3 +103,27 @@ export class SocketGateway {
   }
   }
 
+        /* const io = require('socket.io')(this.server, {
+        cors: {
+          origin: 'http://localhost:5173',
+          methods: ['GET', 'POST', 'PATCH'],
+          allowedHeaders: ['Content-Type', 'Authorization'],
+          credentials: true,
+        },
+      }); */
+
+
+      //I don't know where this is supposed to be. 
+/*       handleFoulUpdate(partidoid: string, data: any){
+        this.foulService.createFoul(foulData)
+        .then((createdFoul) => {
+          io.to(partidoid).emit('foulCreated', {
+            partidoid: data.partidoid,
+            foulData: createdFoul,
+          });
+        })
+        .catch((error) => {
+          console.error('Error creating foul:', error);
+          io.to(partidoid).emit('foulCreationError', { message: 'Failed to create foul' });
+        });
+      } */
