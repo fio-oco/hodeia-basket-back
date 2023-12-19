@@ -30,7 +30,7 @@ export class SubstitutionService {
     });
     try{
       const savedSub = await this.substitutionRepository.save(newSubstitution);
-      this.socketGateway.emitSubstitutionUpdate(createSubstitutionDTO.partido_id, savedSub);
+      //this.socketGateway.emitSubstitutionUpdate(createSubstitutionDTO.partido_id, savedSub);
       return savedSub;
     } catch (error){
       throw error;
