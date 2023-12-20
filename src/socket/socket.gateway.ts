@@ -1,129 +1,139 @@
 import { InjectRepository } from '@nestjs/typeorm';
-import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
+import {
+  ConnectedSocket,
+  MessageBody,
+  SubscribeMessage,
+  WebSocketGateway,
+  WebSocketServer,
+} from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { createServer } from "http";
-import { Match } from 'src/matches/match.entity';
+//import { createServer } from 'http';
 import { MatchService } from 'src/matches/match.service';
-import { User } from 'src/users/entities/user.entity';
-import { Repository } from 'typeorm';
+import { Match } from 'src/matches/match.entity';
 import { FoulService } from 'src/fouls/foul.service';
+import { Player } from 'src/players/player.entity';
+//import { SubstitutionService } from 'src/substitutions/substitution.service';
+import { ScoreService } from 'src/scores/score.service';
+import { TeamService } from 'src/teams/team.service';
+import { Repository } from 'typeorm';
 
 @WebSocketGateway(3001, { cors: 'http://localhost:5173' })
 export class SocketGateway {
-  @WebSocketServer()
-   private  server: Server;
-   private  matchRooms: Record<string, string[]> = {}; //to store the ids of match rooms
 
   constructor(
-    //@InjectRepository(Match) private readonly matchRepository: Repository<Match>){}
-    //private readonly matchService: MatchService, 
-    //private readonly foulService: FoulService){
-    /* private readonly matchService: MatchService) */){
-      const httpServer = createServer();
-      const io = new Server(httpServer, {
-        cors: {
-          origin: "http://localhost:5173",
-          methods: ['GET', 'POST', 'PATCH'],
-          allowedHeaders: ['Content-Type', 'Authorization'],
-          // credentials: true,
-        }
-      });
+    private readonly foulService: FoulService,
+    //private readonly substitutionService: SubstitutionService,
+    private readonly scoreService: ScoreService,
+    private readonly matchService: MatchService,
+    private readonly teamService: TeamService,
+    @InjectRepository(Match)
+    private readonly matchRepository: Repository<Match>,
+    @InjectRepository(Player)
+    private readonly playerRepository: Repository<Player>,
+  ) {}
 
-      // io.on('connection', (socket: Socket) => {
-      //   console.log('User connected:', socket.id);
+  @WebSocketServer()
+  server: Server;
+  matchRooms: Record<string, string[]> = {}; //to store the ids of match rooms
 
-      //   socket.on('foulUpdate', (data: any) => {
-
-      //     io.emit('foulUpate', {
-      //       partidoid: data.partidoid,
-      //       foulData:data,
-      //     })
-      //   });
-        
-      //   socket.on('gameUpdate', (data: any) => {
-      //     console.log(data);
-      //     socket.emit('gameUpdate', data)
-          
-      //   })
-
-
-      // });
-      // httpServer.listen(3001, () => {
-      //   console.log('Socket.IO server running on port 3001')
-
-      // })
-    }
-
-  handleConnection(socket: Socket){
+  handleConnection(socket: Socket) {
     socket.on('joinMatchRoom', (partidoid: string) => {
       console.log('cuando me llaman desde el front');
-      
+
       socket.join(partidoid);
-      console.log(`Client connected: ${socket.id} in match room ${partidoid}` );
+      // this.server.in(socket.id).socketsJoin(partidoid)
+      console.log(`Client connected: ${socket.id} in match room ${partidoid}`);
     });
-    
   }
   // handleRefereeData(client: Socket, partidoid: string, data: any){
   //   this.server.emit('gameUpdate', data);
   // }
 
-  handleGameUpdate(socket: Socket) {
-    console.log(socket);
-    socket.on('gameUpdate', (data: any) => {
-      console.log(data);
-      
-      socket.emit('gameUpdate', {data});
-    })
+  @SubscribeMessage('gameUpdate')
+  handleGameUpdate(@MessageBody() payload) {
+    console.log(payload);
+    this.server.to(payload.roomname).emit('gameUpdate', { partido: payload.roomname });
   }
 
   handleJoinMatchRoom(client: Socket, partidoid: string) {
-    client.join(partidoid); // Client joins the room
+    client.join(partidoid); // --> 'client' se conecta a la sala
     if (!this.matchRooms[partidoid]) {
       this.matchRooms[partidoid] = [];
     }
-    this.matchRooms[partidoid].push(client.id); // Store client in the room
+    this.matchRooms[partidoid].push(client.id); // --> para guardar el id del cliente 
     client.to(partidoid).emit('roomCreated', { room: partidoid });
   }
 
-/*   handleDisconnect(client: Socket){
+  handleTeamPoints(){
+
+  }
+  //maybe if I send the equipoid from the front too in the payload..
+
+  /*   handleDisconnect(client: Socket){
     console.log(`Client disconnected: ${client.id}`);
   //need logic for disconnecting ie. leaving the room, closing the connection etc. 
   } */
 
-  emitFoulUpdate(partidoid: string, newFoul: any){
-    this.server.to(partidoid).emit('foulUpdate', newFoul);
+  //etiqueta que conecta el evento del front con la funcion del back
+  @SubscribeMessage('foulUpdate')
+  emitFoulUpdate(@MessageBody() payload) {
+    console.log(payload);
+    //aqui irá al service, que irá a la base de datos
+    this.foulService.createFoul(payload)
+    //aqui enviará a la sala del partidoId, al evento del emit, los valores del payload. 
+    //Esto se verá allá donde haya un socket.on('foulUpdate') en mi rama --> userScreen
+    this.server.to(payload.partidoId).emit('foulUpdate', payload);
   }
 
-  emitScoreUpdate(partidoid: string, newScore: any){
-    this.server.to(partidoid).emit('scoreUpdate', newScore);
+  @SubscribeMessage('scoreUpdate')
+  emitScoreUpdate(@MessageBody() payload) {
+    console.log(payload);
+    this.scoreService.createScore(payload)
+    //need the logic for dividing the points here before it is sent to the
+    this.server.to(payload.partidoId).emit('scoreUpdate', payload);
   }
 
-  emitSubstitutionUpdate(partidoid: string, newSubstitution: any){
+  @SubscribeMessage('scoreUpdate')
+  async handleScoreUpdate(@MessageBody() newData: any): Promise<any> {
+    try {
+      const match = await this.matchRepository.findOne({ where: { partidoid: newData.partidoid }, relations: ['local', 'visitante'] });
+      const player = await this.playerRepository.findOne({ where: { jugadorid: newData.jugadorid } });
+
+      if (!match || !player) {
+        return { success: false, message: 'Match/ Player not found' };
+      }
+
+      let equipoToUpdate: string;
+      if (player.equipoid === match.localid.equipoid) {
+        equipoToUpdate = 'local';
+      } else if (player.equipoid === match.visitanteid.equipoid) {
+        equipoToUpdate = 'visitante';
+      } else {
+        return { success: false, message: 'Player on neither tem' };
+      }
+
+      const puntos = newData.puntos;
+
+      // Update the score based on equipoToUpdate (local or visitante)
+      if (equipoToUpdate === 'local') {
+        match.puntuacion_equipo_local += puntos;
+      } else if (equipoToUpdate === 'visitante'){
+        match.puntuacion_equipo_visitante += puntos;
+      }
+
+      await this.matchRepository.save(match);
+      await this.playerRepository.save(player);
+
+      // Emit the updated data back to the client
+      this.server.to(newData.partidoid).emit('scoreUpdate', newData);
+
+      return { success: true, message: 'Updated successfully' };
+    } catch (error) {
+      console.error('Error updating scores:', error);
+    }
+
+/*   emitSubstitutionUpdate(partidoid: string, newSubstitution: any) {
     this.server.to(partidoid).emit('substitutionUpdate', newSubstitution);
-  }
-  }
-
-        /* const io = require('socket.io')(this.server, {
-        cors: {
-          origin: 'http://localhost:5173',
-          methods: ['GET', 'POST', 'PATCH'],
-          allowedHeaders: ['Content-Type', 'Authorization'],
-          credentials: true,
-        },
-      }); */
-
-
-      //I don't know where this is supposed to be. 
-/*       handleFoulUpdate(partidoid: string, data: any){
-        this.foulService.createFoul(foulData)
-        .then((createdFoul) => {
-          io.to(partidoid).emit('foulCreated', {
-            partidoid: data.partidoid,
-            foulData: createdFoul,
-          });
-        })
-        .catch((error) => {
-          console.error('Error creating foul:', error);
-          io.to(partidoid).emit('foulCreationError', { message: 'Failed to create foul' });
-        });
-      } */
+  } */
+}
+}

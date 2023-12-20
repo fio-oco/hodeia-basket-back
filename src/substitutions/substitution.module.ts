@@ -13,7 +13,8 @@ import { Season } from 'src/seasons/season.entity';
 @Module({
   imports: [TypeOrmModule.forFeature([Substitution, Player, Match, Team, Season])],
   controllers: [SubstitutionController],
-  providers: [SubstitutionService, SocketGateway, MatchService]
+  providers: [SubstitutionService, MatchService],
+  exports: [SubstitutionService]
 })
 export class SubstitutionModule {
 

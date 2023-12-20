@@ -3,14 +3,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Score } from './score.entity';
 import { CreateScoreDTO } from './create_score.dto';
-import { SocketGateway } from 'src/socket/socket.gateway';
+//import { SocketGateway } from 'src/socket/socket.gateway';
 
 @Injectable()
 export class ScoreService {
   constructor(
     @InjectRepository(Score)
     private readonly scoreRepository: Repository<Score>,
-    private readonly socketGateway: SocketGateway,
+    //private readonly socketGateway: SocketGateway,
   ) {}
 
   async findScoresByMatch(partidoid: string): Promise<Score[] | null> {
@@ -28,7 +28,7 @@ export class ScoreService {
     });
     try {
       const savedScore = await this.scoreRepository.save(newScore);
-      this.socketGateway.emitScoreUpdate(createScoreDTO.partidoid, savedScore);
+      //this.socketGateway.emitScoreUpdate(createScoreDTO.partidoid, savedScore);
       return savedScore;
     } catch (error) {
       throw error;
