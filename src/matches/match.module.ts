@@ -13,7 +13,8 @@ import { Season_Team } from 'src/season_teams/season_team.entity';
 @Module({
   imports: [TypeOrmModule.forFeature([Match, Team, User, Season, Substitution, Player, Season_Team])],
   controllers: [MatchController],
-  providers: [MatchService]
+  providers: [MatchService],
+  exports: [MatchService]
 })
 export class MatchModule {
 

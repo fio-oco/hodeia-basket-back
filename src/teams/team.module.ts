@@ -12,6 +12,7 @@ import { Substitution } from 'src/substitutions/substitution.entity';
 @Module({
   imports: [TypeOrmModule.forFeature([Team, Match, User, Liga, Substitution])],
   controllers: [TeamController],
-  providers: [TeamService,]
+  providers: [TeamService],
+  exports: [TeamService]
 })
 export class TeamModule {}
