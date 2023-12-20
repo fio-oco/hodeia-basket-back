@@ -93,47 +93,53 @@ export class SocketGateway {
     this.server.to(payload.partidoId).emit('scoreUpdate', payload);
   }
 
-  @SubscribeMessage('scoreUpdate')
-  async handleScoreUpdate(@MessageBody() newData: any): Promise<any> {
+  @SubscribeMessage('scoreUpdateTeams')
+  async handleScoreUpdate(@MessageBody() payload): Promise<any> {
+    console.log(payload);
     try {
-      const match = await this.matchRepository.findOne({ where: { partidoid: newData.partidoid }, relations: ['local', 'visitante'] });
-      const player = await this.playerRepository.findOne({ where: { jugadorid: newData.jugadorid } });
-
+      const match = await this.matchRepository.findOne({ where: { partidoid: payload.partidoId }, relations: ['localid', 'visitanteid'] });
+      console.log(match);
+      const player = await this.playerRepository.findOne({ where: { jugadorid: payload.jugadorId } }); 
+      console.log(player);
       if (!match || !player) {
-        return { success: false, message: 'Match/ Player not found' };
+        console.log('Match/ Player not found');
       }
 
-      let equipoToUpdate: string;
-      if (player.equipoid === match.localid.equipoid) {
-        equipoToUpdate = 'local';
+      let equipoToUpdate: any;
+      if (player.equipoid === match.localid.equipoid) {  
+        equipoToUpdate = match.localid.equipoid;
+        console.log(equipoToUpdate); //no entiendo por qué no puede coger ningún equipo si me los traen arriba
       } else if (player.equipoid === match.visitanteid.equipoid) {
-        equipoToUpdate = 'visitante';
-      } else {
-        return { success: false, message: 'Player on neither tem' };
+        equipoToUpdate = match.visitanteid.equipoid;     //'visitanteid'
+        console.log(equipoToUpdate);
+      } else {  
+        console.log('Player on neither tem' );
       }
 
-      const puntos = newData.puntos;
+      const puntos = payload.puntos;
+      console.log(puntos);
 
-      // Update the score based on equipoToUpdate (local or visitante)
-      if (equipoToUpdate === 'local') {
+      // Update the score --> equipoToUpdate (local/ visitante)
+      if (equipoToUpdate === match.localid.equipoid) {
         match.puntuacion_equipo_local += puntos;
-      } else if (equipoToUpdate === 'visitante'){
+      } else if (equipoToUpdate === match.visitanteid.equipoid){
         match.puntuacion_equipo_visitante += puntos;
       }
 
-      await this.matchRepository.save(match);
-      await this.playerRepository.save(player);
+/*       await this.matchRepository.save(match);
+      await this.playerRepository.save(player); */
 
-      // Emit the updated data back to the client
-      this.server.to(newData.partidoid).emit('scoreUpdate', newData);
+      this.scoreService.createScore(payload);
+      // Data --> client espero que sí
+      this.server.to(payload.partidoId).emit('scoreUpdateTeams', payload); 
 
       return { success: true, message: 'Updated successfully' };
     } catch (error) {
       console.error('Error updating scores:', error);
     }
-
+  }
 /*   emitSubstitutionUpdate(partidoid: string, newSubstitution: any) {
     this.server.to(partidoid).emit('substitutionUpdate', newSubstitution);
   } */
-}
+
 }
