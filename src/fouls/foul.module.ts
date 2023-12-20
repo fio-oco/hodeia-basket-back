@@ -14,6 +14,7 @@ import { Season } from 'src/seasons/season.entity';
 @Module({
   imports: [TypeOrmModule.forFeature([Foul, Player, Match, Team, Season])],
   controllers: [FoulController],
-  providers: [FoulService, SocketGateway, MatchService, TeamService]
+  providers: [FoulService, MatchService, TeamService],
+  exports: [FoulService]
 })
 export class FoulModule {}
