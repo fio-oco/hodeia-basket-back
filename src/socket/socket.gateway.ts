@@ -97,12 +97,12 @@ export class SocketGateway {
     console.log(payload);
     try {
       const match = await this.matchRepository.findOne({
-        where: { partidoid: payload.partidoId },
+        where: { partidoid: payload.partidoid },
         relations: ['localid', 'visitanteid'],
       });
       console.log(match);
       const player = await this.playerRepository.findOne({
-        where: { jugadorid: payload.jugadorId },
+        where: { jugadorid: payload.jugadorid },
       });
       console.log(player);
       if (!match || !player) {
@@ -110,6 +110,8 @@ export class SocketGateway {
       }
 
       let equipoToUpdate: any;
+      console.log(match.localid.equipoid);
+      console.log(match.visitanteid.equipoid);
       if (player.equipoid === match.localid.equipoid) {
         equipoToUpdate = match.localid.equipoid;
         console.log(equipoToUpdate);
@@ -117,8 +119,9 @@ export class SocketGateway {
         equipoToUpdate = match.visitanteid.equipoid; //'visitanteid'
         console.log(equipoToUpdate);
       } else {
-        console.log('Player on neither tem');
+        console.log('Player on neither team');
       }
+
 
       const puntos = payload.puntos;
 
@@ -128,17 +131,20 @@ export class SocketGateway {
       } else if (equipoToUpdate === match.visitanteid.equipoid) {
         match.puntuacion_equipo_visitante += puntos;
       }
+      console.log(equipoToUpdate);
 
       /*       await this.matchRepository.save(match);
       await this.playerRepository.save(player); */
 
+      this.server
+        .to(payload.partidoid)
+        .emit('scoreUpdateTeams', { equipoToUpdate, puntos });
+      console.log('all g');
+      
       this.scoreService.createScore(payload);
       // Data --> client espero que sí
-      this.server
-        .to(payload.partidoId)
-        .emit('scoreUpdateTeams', { equipoToUpdate, puntos });
-
       return { success: true, message: 'Updated successfully' };
+      
     } catch (error) {
       console.error('Error updating scores:', error);
     }
