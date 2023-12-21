@@ -71,13 +71,15 @@ export class SocketGateway {
   } */
 
   @SubscribeMessage('foulUpdate')
-  emitFoulUpdate(@MessageBody() payload) {
+  async emitFoulUpdate(@MessageBody() payload) {
     console.log(payload);
-
+    const player = await this.playerRepository.findOne({
+      where: { jugadorid: payload.jugadorId },
+    });
     this.foulService.createFoul(payload);
     //aqui enviará a la sala del partidoId, al evento del emit, los valores del payload.
     //Esto se verá allá donde haya un socket.on('foulUpdate') en mi rama --> userScreen
-    this.server.to(payload.partidoId).emit('foulUpdate', payload);
+    this.server.to(payload.partidoId).emit('foulUpdate', {...payload, player: `${player.nombre} ${player.apellido}`});
   }
 
   /*   @SubscribeMessage('scoreUpdate')
@@ -132,7 +134,7 @@ export class SocketGateway {
 
       this.server
         .to(payload.partidoid)
-        .emit('scoreUpdateTeams', { equipoToUpdate, puntos });
+        .emit('scoreUpdateTeams', { equipoToUpdate, puntos, player: `${player.nombre} ${player.apellido}` });
       console.log('all g');
 
       this.scoreService.createScore(payload);
