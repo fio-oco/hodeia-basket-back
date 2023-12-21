@@ -6,7 +6,7 @@ import { Team } from './team.entity';
 export class TeamController {
     constructor(private readonly teamService: TeamService) {}
 
-    @Get('all')
+  @Get('all')
     findAll() {
   return this.teamService.findAllTeams();
 }

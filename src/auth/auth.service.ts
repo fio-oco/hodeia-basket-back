@@ -71,9 +71,10 @@ export class AuthService {
         sub: user.usuarioid.toString(),
         rol: user.rol,
     };    //might get errors here w. the role
+    console.log(payload)
     return{
+        rol: user.rol,
         access_token: this.jwtService.sign(payload),
-
     }
   }
 
