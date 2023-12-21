@@ -136,4 +136,11 @@ export class SocketGateway {
     this.server.to(partidoid).emit('substitutionUpdate', newSubstitution);
   } */
 }
+
+@SubscribeMessage('timerUpdate')
+emitTimerUpdate(@MessageBody() payload) {
+
+  
+  this.server.to(payload.partidoId).emit('timerUpdate', payload);
+}
 }
