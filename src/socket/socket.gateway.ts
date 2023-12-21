@@ -108,7 +108,7 @@ export class SocketGateway {
       let equipoToUpdate: any;
       if (player.equipoid === match.localid.equipoid) {  
         equipoToUpdate = match.localid.equipoid;
-        console.log(equipoToUpdate); //no entiendo por qué no puede coger ningún equipo si me los traen arriba
+        console.log(equipoToUpdate); 
       } else if (player.equipoid === match.visitanteid.equipoid) {
         equipoToUpdate = match.visitanteid.equipoid;     //'visitanteid'
         console.log(equipoToUpdate);
@@ -117,7 +117,6 @@ export class SocketGateway {
       }
 
       const puntos = payload.puntos;
-      console.log(puntos);
 
       // Update the score --> equipoToUpdate (local/ visitante)
       if (equipoToUpdate === match.localid.equipoid) {
@@ -131,7 +130,7 @@ export class SocketGateway {
 
       this.scoreService.createScore(payload);
       // Data --> client espero que sí
-      this.server.to(payload.partidoId).emit('scoreUpdateTeams', payload); 
+      this.server.to(payload.partidoId).emit('scoreUpdateTeams', {equipoToUpdate, puntos}); 
 
       return { success: true, message: 'Updated successfully' };
     } catch (error) {
